@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class UserSeeder extends Seeder
@@ -13,11 +12,20 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        User::create([
-            'name' => 'SrokhHub Admin',
-            'email' => 'admin@srokhhub.com',
-            'password' => bcrypt('admin123456'),
-            'role' => 'admin',
-        ]);
+        $password = env('ADMIN_PASSWORD');
+        
+        if (! $password) {
+            $password = bin2hex(random_bytes(12));
+            $this->command->warn("No ADMIN_PASSWORD set in .env — generated password: {$password}");
+        }
+
+        User::firstOrCreate(
+            ['email' => env('ADMIN_EMAIL', 'admin@srokhhub.com')],
+            [
+                'name'     => 'SrokhHub Admin',
+                'password' => bcrypt($password),
+                'role'     => 'admin',
+            ]
+        );
     }
 }

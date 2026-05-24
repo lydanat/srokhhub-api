@@ -14,7 +14,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('post_images', function (Blueprint $table) {
-            $table->uuid('id')->primary()->default(DB::raw('gen_random_uuid()'));
+            $table->uuid('id')->primary();
             $table->foreignUuid('post_id')->constrained()->cascadeOnDelete();
             $table->string('image_url');
             $table->timestamps();

@@ -22,7 +22,7 @@ class CategorySeeder extends Seeder
         ];
 
         foreach ($categories as $name){
-            Category::create([
+            Category::firstOrCreate([
                 'name' => $name,
                 'slug' => Str::slug($name)
             ]);

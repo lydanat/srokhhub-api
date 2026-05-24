@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
 
 class PostImage extends Model
 {
+    use HasUuids;
+
     public $incrementing = false;
     protected $keyType = 'string';
 
@@ -19,13 +21,4 @@ class PostImage extends Model
         return $this->belongsTo(Post::class);
     }
 
-    protected static function boot(): void
-    {
-        parent::boot();
-        static::creating(function ($model) { 
-            if (empty($model->id)) {
-                $model->id = Str::uuid()->toString();
-            }
-        });
-    }
 }

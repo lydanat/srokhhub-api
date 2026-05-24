@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
 
 class Post extends Model
 {
+    use HasUlids;
+
     public $incrementing = false;
     protected $keyType = 'string';
 
@@ -39,16 +41,6 @@ class Post extends Model
 
     public function images()
     {
-        return $this->HasMany(PostImage::class);
-    }
-
-    protected static function boot(): void
-    {
-        parent::boot();
-        static::creating(function ($model) { 
-            if (empty($model->id)) {
-                $model->id = Str::uuid()->toString();
-            }
-        });
+        return $this->hasMany(PostImage::class);
     }
 }
