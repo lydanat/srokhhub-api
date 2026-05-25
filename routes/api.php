@@ -1,7 +1,10 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\FeedController;
 use Illuminate\Support\Facades\Route;
+
+Route::get('/feed', [FeedController::class, 'index']);
 
 Route::prefix('auth')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
