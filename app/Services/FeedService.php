@@ -8,7 +8,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class FeedService
 {
-    public function getUnifiedFeed(int $perPage = 20, ?string $source = null): LengthAwarePaginator
+    public function getUnifiedFeed(int $perPage = 20, ?string $source = null, int $page = 1): LengthAwarePaginator
     {
         // Fetch approved internal posts
         $internalPosts = Post::with(['category', 'user'])
@@ -34,8 +34,7 @@ class FeedService
         // Sort by published_at descending (newest first)
         $sorted = $combined->sortByDesc('published_at')->values();
 
-        // Manual pagination
-        $page   = (int) request()->get('page', 1);
+        // Pagination
         $offset = ($page - 1) * $perPage;
         $items  = $sorted->slice($offset, $perPage)->values();
 
@@ -55,15 +54,15 @@ class FeedService
     private function normalizePost(Post $post): array
     {
         return [
-            'id'           => $post->id,
-            'title'        => $post->title_en,
-            'content'      => $post->content_en,
-            'image'        => $post->main_image,
-            'source'       => 'internal',
-            'category'     => $post->category?->name,
-            'author'       => $post->user?->name,
+            'id' => $post->id,
+            'title' => $post->title_en,
+            'content' => $post->content_en,
+            'image' => $post->main_image,
+            'source' => 'internal',
+            'category' => $post->category?->name,
+            'author' => $post->user?->name,
             'published_at' => $post->published_at,
-            'url'          => null,
+            'url' => null,
         ];
     }
 
@@ -71,15 +70,15 @@ class FeedService
     private function normalizeExternalNews(ExternalNews $news): array
     {
         return [
-            'id'           => $news->id,
-            'title'        => $news->title,
-            'content'      => $news->content,
-            'image'        => $news->image,
-            'source'       => $news->source,
-            'category'     => $news->category,
-            'author'       => null,
+            'id' => $news->id,
+            'title' => $news->title,
+            'content' => $news->content,
+            'image' => $news->image,
+            'source' => $news->source,
+            'category' => $news->category,
+            'author' => null,
             'published_at' => $news->published_at,
-            'url'          => $news->url,
+            'url' => $news->url,
         ];
     }
 }

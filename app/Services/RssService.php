@@ -40,8 +40,14 @@ class RssService
             return;
         }
 
+        libxml_set_streams_context(null);
+        $previous = libxml_use_internal_errors(true);
+
         // Parse XML safely
-        $xml = simplexml_load_string($response->body(), 'SimpleXMLElement', LIBXML_NOCDATA);
+        $xml = simplexml_load_string($response->body(), 'SimpleXMLElement', LIBXML_NOCDATA | LIBXML_NONET | LIBXML_NOERROR);
+
+        libxml_use_internal_errors($previous);
+        libxml_clear_errors();
 
         if (! $xml) {
             Log::warning("Failed to parse XML for {$source}");
